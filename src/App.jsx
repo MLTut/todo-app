@@ -10,6 +10,7 @@ function App() {
       const newTodo = {
         id: Date.now(),
         text: inputValue,
+        completed: false,
       }
       setTodos([...todos, newTodo])
       setInputValue('')
@@ -18,6 +19,12 @@ function App() {
 
   const handleDeleteTodo = (id) => {
     setTodos(todos.filter(todo => todo.id !== id))
+  }
+
+  const handleToggleComplete = (id) => {
+    setTodos(todos.map(todo =>
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    ))
   }
 
   return (
@@ -44,7 +51,15 @@ function App() {
           ) : (
             todos.map(todo => (
               <div key={todo.id} className="todo-item">
-                <span className="todo-text">{todo.text}</span>
+                <input
+                  type="checkbox"
+                  checked={todo.completed}
+                  onChange={() => handleToggleComplete(todo.id)}
+                  className="todo-checkbox"
+                />
+                <span className={`todo-text ${todo.completed ? 'completed' : ''}`}>
+                  {todo.text}
+                </span>
                 <button
                   onClick={() => handleDeleteTodo(todo.id)}
                   className="delete-button"
